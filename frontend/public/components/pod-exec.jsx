@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import { Base64 } from 'js-base64';
 import { ExpandIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
-
+import { withTranslation } from 'react-i18next';
 import store from '../redux';
 import { LoadingBox, LoadingInline, Dropdown, ResourceIcon } from './utils';
 import { connectToFlags } from '../reducers/features';
@@ -31,7 +31,7 @@ const nameWithIcon = (name) => (
 const NO_SH =
   'starting container process caused "exec: \\"sh\\": executable file not found in $PATH"';
 
-export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
+export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(withTranslation()(
   class PodExec extends React.PureComponent {
     constructor(props) {
       super(props);
@@ -47,6 +47,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
     }
 
     connect_() {
+      const { t } = this.props;
       const { metadata } = this.props.obj;
       const { activeContainer } = this.state;
       const usedClient = this.props.flags[FLAGS.OPENSHIFT] ? 'oc' : 'kubectl';
@@ -112,7 +113,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
           if (!evt || evt.wasClean === true) {
             return;
           }
-          const error = evt.reason || 'The terminal connection has closed.';
+          const error = evt.reason || t('COMMON:MSG_DETAILS_TABTERMINAL_2');
           this.setState({ error });
           this.terminal.current && this.terminal.current.onConnectionClosed(error);
           this.ws.destroy();
@@ -169,7 +170,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
 
     render() {
       const { containers, activeContainer, open, error } = this.state;
-      const { message } = this.props;
+      const { message, t } = this.props;
 
       let contents = <LoadingBox />;
       if (error) {
@@ -182,7 +183,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
         <div>
           <div className="co-toolbar">
             <div className="co-toolbar__group co-toolbar__group--left">
-              <div className="co-toolbar__item">Connecting to</div>
+              <div className="co-toolbar__item">{t('COMMON:MSG_DETAILS_TABTERMINAL_1')}</div>
               <div className="co-toolbar__item">
                 <Dropdown
                   className="btn-group"
@@ -201,7 +202,7 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
                     onClick={() => this.setFullscreen(true)}
                   >
                     <ExpandIcon className="co-icon-space-r" />
-                    Expand
+                    {t('COMMON:MSG_DETAILS_TABLOGS_2')}
                   </Button>
                 </div>
               </div>
@@ -213,4 +214,5 @@ export const PodExec = connectToFlags(FLAGS.OPENSHIFT)(
       );
     }
   },
+)
 );
