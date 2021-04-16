@@ -375,10 +375,10 @@ export const PodsDetailsPage: React.FC<PodDetailsPageProps> = props => {
         navFactory.editResource(),
         navFactory.envEditor(PodEnvironmentComponent),
         navFactory.logs(PodLogs),
-      navFactory.events(ResourceEventStream),
+        navFactory.events(ResourceEventStream),
         {
           href: 'terminal',
-          name:  t('COMMON:MSG_DETAILS_TAB_8'),
+          name: t('COMMON:MSG_DETAILS_TAB_8'),
           component: PodExecLoader,
         },
       ]}
